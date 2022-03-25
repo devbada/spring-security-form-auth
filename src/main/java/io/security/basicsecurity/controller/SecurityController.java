@@ -19,16 +19,6 @@ import java.util.Map;
 @RestController
 public class SecurityController {
 
-    @GetMapping("/")
-    public String index() {
-        return "home";
-    }
-
-    @GetMapping("/login")
-    public String login() {
-        return "login";
-    }
-
     @GetMapping("/user")
     public String user(HttpSession session) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
