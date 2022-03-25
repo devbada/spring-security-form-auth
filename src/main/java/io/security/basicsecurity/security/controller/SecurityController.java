@@ -1,4 +1,4 @@
-package io.security.basicsecurity.controller;
+package io.security.basicsecurity.security.controller;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;

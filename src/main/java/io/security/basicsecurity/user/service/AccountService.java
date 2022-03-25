@@ -7,6 +7,7 @@ import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.security.auth.login.AccountNotFoundException;
 import java.util.Objects;
 
 /**
@@ -21,8 +22,10 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
 
-    public Account getByName(final String name) {
-        return accountRepository.findByName(name);
+    @SneakyThrows
+    @Transactional(readOnly=true)
+    public Account getByName(final String username) {
+        return accountRepository.findByName(username).orElse(null);
     }
 
     @SneakyThrows
@@ -31,6 +34,8 @@ public class AccountService {
         if (Objects.nonNull(getByName(account.getName()))) {
             throw new Exception("already Exists");
         }
+
+        account.setRole("USER");
         return accountRepository.save(account);
     }
 }
