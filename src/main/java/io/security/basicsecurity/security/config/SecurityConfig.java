@@ -1,6 +1,8 @@
 package io.security.basicsecurity.security.config;
 
+import io.security.basicsecurity.security.common.FormAuthenticationDetailsSource;
 import io.security.basicsecurity.security.provider.CustomAuthenticationProvider;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +22,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  **********************************************************************************************************************/
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private final FormAuthenticationDetailsSource authenticationDetailsSource;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -40,7 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/", "/users/register", "/users").permitAll()
+                .antMatchers("/", "/users/register", "/users", "/error").permitAll()
                 .antMatchers("/users/myPage").hasRole("USER")
                 .antMatchers("/messages").hasRole("MANAGER")
                 .antMatchers("/config").hasRole("ADMIN")
@@ -51,6 +56,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/user/login") // Controller 의 mapping url
                 .defaultSuccessUrl("/")
                 .loginProcessingUrl("/loginProcess")
+                .authenticationDetailsSource(authenticationDetailsSource)
                 .permitAll()
         ;
     }
