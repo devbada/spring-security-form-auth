@@ -48,6 +48,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
                 .formLogin()
                 .usernameParameter("name")
+                .loginPage("/user/login") // Controller 의 mapping url
+                .defaultSuccessUrl("/")
+                .loginProcessingUrl("/loginProcess")
+                .permitAll()
         ;
     }
 
