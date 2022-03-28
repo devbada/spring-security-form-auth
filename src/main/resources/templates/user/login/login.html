@@ -13,7 +13,7 @@
             <form th:action="@{/loginProcess}" class="form-signin" method="post">
 <!--            <form name="frm" id="frm" action="#" method="post" onsubmit="return false" class="form-signin">-->
                 <div class="form-group">
-                    <input type="text" class="form-control" name="name" placeholder="아이디" required="required"
+                    <input type="text" class="form-control" name="userId" placeholder="아이디" required="required"
                            autofocus="autofocus" />
 
                     <input type="hidden" th:value="secret-value-12345" name="secretKey" />
@@ -26,8 +26,8 @@
                     Remember Me<input type="checkbox" name="remember-me" />
                 </div>
                 <div th:if="${param.error}" class="form-group">
-                    <span th:text="${session[SPRING_SECURITY_LAST_EXCEPTION]}"
-                          class="alert alert-danger">잘못된 아이디나 암호입니다</span>
+                    <span th:text="${param.exception}"
+                          class="alert alert-danger">${param.exception}</span>
                 </div>
                 <button type="submit" class="btn btn-lg btn-primary btn-block">로그인</button>
 <!--                <button type="submit" onclick="formLogin()" id="formbtn" class="btn btn-lg btn-primary btn-block">로그인</button>-->

@@ -25,7 +25,7 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     private final RequestCache requestCache = new HttpSessionRequestCache();
 
-    private RedirectStrategy strategy = new DefaultRedirectStrategy();
+    private final RedirectStrategy strategy = new DefaultRedirectStrategy();
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {

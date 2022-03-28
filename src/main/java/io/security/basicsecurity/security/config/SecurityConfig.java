@@ -1,6 +1,7 @@
 package io.security.basicsecurity.security.config;
 
 import io.security.basicsecurity.security.common.FormAuthenticationDetailsSource;
+import io.security.basicsecurity.security.handler.CustomAuthenticationFailureHandler;
 import io.security.basicsecurity.security.handler.CustomAuthenticationSuccessHandler;
 import io.security.basicsecurity.security.provider.CustomAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final FormAuthenticationDetailsSource authenticationDetailsSource;
     private final CustomAuthenticationSuccessHandler successHandler;
+    private final CustomAuthenticationFailureHandler failureHandler;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -47,19 +49,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/", "/users/register", "/users", "/error").permitAll()
+                .antMatchers("/", "/users/register", "/users", "/error", "/user/login*").permitAll()
                 .antMatchers("/users/myPage").hasRole("USER")
                 .antMatchers("/messages").hasRole("MANAGER")
                 .antMatchers("/config").hasRole("ADMIN")
                 .anyRequest().authenticated()
             .and()
                 .formLogin()
-                .usernameParameter("name")
+                .usernameParameter("userId")
                 .loginPage("/user/login") // Controller 의 mapping url
                 .loginProcessingUrl("/loginProcess")
                 .defaultSuccessUrl("/")
                 .authenticationDetailsSource(authenticationDetailsSource)
                 .successHandler(successHandler)
+                .failureHandler(failureHandler)
                 .permitAll()
         ;
     }
