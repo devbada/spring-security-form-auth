@@ -34,8 +34,6 @@ public class AccountService {
         if (Objects.nonNull(getByName(account.getName()))) {
             throw new Exception("already Exists");
         }
-
-        account.setRole("USER");
         return accountRepository.save(account);
     }
 }

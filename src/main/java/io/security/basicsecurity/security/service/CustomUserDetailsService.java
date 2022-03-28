@@ -2,7 +2,6 @@ package io.security.basicsecurity.security.service;
 
 import io.security.basicsecurity.security.context.AccountContext;
 import io.security.basicsecurity.user.entity.Account;
-import io.security.basicsecurity.user.repository.AccountRepository;
 import io.security.basicsecurity.user.service.AccountService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -29,6 +28,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Account account = accountService.getByName(username);
+
 
         List<GrantedAuthority> roles = new ArrayList<>();
         roles.add(new SimpleGrantedAuthority(account.getRole()));
