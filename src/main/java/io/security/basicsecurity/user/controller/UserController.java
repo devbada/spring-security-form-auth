@@ -46,6 +46,6 @@ public class UserController {
 
         model.addAttribute("account", persistAccount);
 
-        return "redirect:/login";
+        return "redirect:/user/login";
     }
 }

@@ -1,6 +1,7 @@
 package io.security.basicsecurity.security.config;
 
 import io.security.basicsecurity.security.common.FormAuthenticationDetailsSource;
+import io.security.basicsecurity.security.handler.CustomAuthenticationSuccessHandler;
 import io.security.basicsecurity.security.provider.CustomAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -26,6 +27,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final FormAuthenticationDetailsSource authenticationDetailsSource;
+    private final CustomAuthenticationSuccessHandler successHandler;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -54,9 +56,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin()
                 .usernameParameter("name")
                 .loginPage("/user/login") // Controller 의 mapping url
-                .defaultSuccessUrl("/")
                 .loginProcessingUrl("/loginProcess")
+                .defaultSuccessUrl("/")
                 .authenticationDetailsSource(authenticationDetailsSource)
+                .successHandler(successHandler)
                 .permitAll()
         ;
     }
