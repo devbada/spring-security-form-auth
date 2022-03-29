@@ -1,5 +1,6 @@
 package io.security.basicsecurity.user.controller;
 
+import io.security.basicsecurity.user.entity.Account;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.Authentication;
@@ -61,5 +62,16 @@ public class LoginController {
         }
 
         return "redirect:/user/login";
+    }
+
+    @GetMapping("/denied")
+    public String denied(@RequestParam(value="exception", required=false) String exception, Model model ) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        Account account = (Account) authentication.getPrincipal();
+        model.addAttribute("name", account.getName());
+        model.addAttribute("exception", exception);
+
+        return "/user/login/denied";
     }
 }

@@ -1,6 +1,7 @@
 package io.security.basicsecurity.security.config;
 
 import io.security.basicsecurity.security.common.FormAuthenticationDetailsSource;
+import io.security.basicsecurity.security.handler.CustomAccessDeniedHandler;
 import io.security.basicsecurity.security.handler.CustomAuthenticationFailureHandler;
 import io.security.basicsecurity.security.handler.CustomAuthenticationSuccessHandler;
 import io.security.basicsecurity.security.provider.CustomAuthenticationProvider;
@@ -16,6 +17,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.AccessDeniedHandler;
 
 /**
  * @since       2022.01.05
@@ -27,9 +29,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final FormAuthenticationDetailsSource authenticationDetailsSource;
-    private final CustomAuthenticationSuccessHandler successHandler;
-    private final CustomAuthenticationFailureHandler failureHandler;
+    private final FormAuthenticationDetailsSource       authenticationDetailsSource;
+    private final CustomAuthenticationSuccessHandler    successHandler;
+    private final CustomAuthenticationFailureHandler    failureHandler;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -49,11 +51,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/", "/users/register", "/users", "/error", "/user/login*").permitAll()
                 .antMatchers("/users/myPage").hasRole("USER")
                 .antMatchers("/messages").hasRole("MANAGER")
-                .antMatchers("/config").hasRole("ADMIN")
+                .antMatchers("/admin/config").hasRole("ADMIN")
+                .antMatchers("/", "/users/register", "/users", "/error", "/user/login*").permitAll()
                 .anyRequest().authenticated()
+            .and()
+                .exceptionHandling()
+                .accessDeniedHandler(accessDeniedHandler())
             .and()
                 .formLogin()
                 .usernameParameter("userId")
@@ -67,11 +72,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         ;
     }
 
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler() {
+        return new CustomAccessDeniedHandler("/denied");
+    }
+
     /*
     * js /css /image 파일 등 보안 필터를 적용할 필요가 없는 리소스를 설정
     **/
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+        web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations())
+                      .antMatchers("/webjars/**");
     }
 }

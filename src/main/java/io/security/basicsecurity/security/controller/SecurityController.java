@@ -1,11 +1,14 @@
 package io.security.basicsecurity.security.controller;
 
+import io.security.basicsecurity.user.entity.Account;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
@@ -54,11 +57,6 @@ public class SecurityController {
     @GetMapping("/admin/users")
     public String users() {
         return "admin users";
-    }
-
-    @GetMapping("/denied")
-    public String denied() {
-        return "access denied";
     }
 
     @PostMapping("/join/users")
