@@ -26,6 +26,7 @@ public class AjaxAuthenticationProvider implements AuthenticationProvider {
 
     /**
      * 검증을 위한 구현체
+     * AJAX 이므로 response body 에 담아 보낼 수 있도록 처리 (AjaxAuthenticationSuccessHandler)
      * @return AjaxAuthenticationToken
      * @throws AuthenticationException, BadCredentialsException
      */
