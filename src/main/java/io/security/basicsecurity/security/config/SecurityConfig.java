@@ -1,17 +1,15 @@
 package io.security.basicsecurity.security.config;
 
 import io.security.basicsecurity.security.common.FormAuthenticationDetailsSource;
-import io.security.basicsecurity.security.filter.AjaxLoginProcessingFilter;
 import io.security.basicsecurity.security.handler.CustomAccessDeniedHandler;
 import io.security.basicsecurity.security.handler.CustomAuthenticationFailureHandler;
 import io.security.basicsecurity.security.handler.CustomAuthenticationSuccessHandler;
 import io.security.basicsecurity.security.provider.CustomAuthenticationProvider;
-import io.security.basicsecurity.security.token.AjaxAuthenticationToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -21,7 +19,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
  * @since       2022.01.05
@@ -31,6 +28,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@Order(1)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final FormAuthenticationDetailsSource       authenticationDetailsSource;
@@ -39,11 +37,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(authenticationProvider());
+        auth.authenticationProvider(customAuthenticationProvider());
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider() {
+    public AuthenticationProvider customAuthenticationProvider() {
         return new CustomAuthenticationProvider();
     }
 
@@ -72,9 +70,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
                 .exceptionHandling()
                 .accessDeniedHandler(accessDeniedHandler())
-            .and()
-                .addFilterBefore(ajaxLoginProcessingFilter(), UsernamePasswordAuthenticationFilter.class)
-                .csrf().disable()
         ;
     }
 
@@ -90,17 +85,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations())
                       .antMatchers("/webjars/**");
-    }
-
-    @Bean
-    public AjaxLoginProcessingFilter ajaxLoginProcessingFilter() throws Exception {
-        AjaxLoginProcessingFilter ajaxLoginProcessingFilter = new AjaxLoginProcessingFilter();
-        ajaxLoginProcessingFilter.setAuthenticationManager(authenticationManagerBean());
-        return ajaxLoginProcessingFilter;
-    }
-
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
     }
 }
