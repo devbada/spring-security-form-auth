@@ -11,6 +11,20 @@ public class AccountForm {
 
     public static class Request {
 
+
+
+        @Setter
+        @Getter
+        @ToString
+        @Builder
+        @AllArgsConstructor
+        @NoArgsConstructor
+        public static class Login {
+
+            private String name;
+            private String password;
+        }
+
         @Setter
         @Getter
         @ToString
