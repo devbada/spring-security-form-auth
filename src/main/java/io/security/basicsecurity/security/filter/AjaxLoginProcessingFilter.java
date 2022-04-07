@@ -1,8 +1,8 @@
 package io.security.basicsecurity.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.security.basicsecurity.admin.domain.dto.AccountDto;
 import io.security.basicsecurity.security.token.AjaxAuthenticationToken;
-import io.security.basicsecurity.user.form.AccountForm;
 import lombok.SneakyThrows;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -35,7 +35,7 @@ public class AjaxLoginProcessingFilter extends AbstractAuthenticationProcessingF
             throw new IllegalAccessException("Authentication is not supported");
         }
 
-        AccountForm.Request.Login login = objectMapper.readValue(request.getReader(), AccountForm.Request.Login.class);
+        AccountDto.Request.Login login = objectMapper.readValue(request.getReader(), AccountDto.Request.Login.class);
 
         if (Objects.isNull(login)) {
             throw new IllegalArgumentException("Account information should not be null");

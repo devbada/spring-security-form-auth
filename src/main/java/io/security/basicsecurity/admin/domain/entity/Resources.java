@@ -1,13 +1,9 @@
-package io.security.basicsecurity.user.form;
-
-import lombok.*;
+package io.security.basicsecurity.admin.domain.entity;
 
 /**
- * @since       2022.03.24
+ * @since       2022.04.07
  * @author      minam
- * @description account form
+ * @description resources
  **********************************************************************************************************************/
-public class AccountForm {
-
-
+public class Resources {
 }

@@ -1,6 +1,6 @@
 package io.security.basicsecurity.user.repository;
 
-import io.security.basicsecurity.user.entity.Account;
+import io.security.basicsecurity.admin.domain.entity.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,6 +1,7 @@
 package io.security.basicsecurity.user.controller;
 
-import io.security.basicsecurity.user.entity.Account;
+import io.security.basicsecurity.admin.domain.dto.AccountDto;
+import io.security.basicsecurity.admin.domain.entity.Account;
 import io.security.basicsecurity.user.form.AccountForm;
 import io.security.basicsecurity.user.service.AccountService;
 import lombok.AllArgsConstructor;
@@ -36,7 +37,7 @@ public class UserController {
 
     @SneakyThrows
     @PostMapping("/users")
-    public String add(AccountForm.Request.Add form, Model model) {
+    public String add(AccountDto.Request.Add form, Model model) {
 
         ModelMapper modelMapper = new ModelMapper() ;
         Account account = modelMapper.map(form, Account.class);

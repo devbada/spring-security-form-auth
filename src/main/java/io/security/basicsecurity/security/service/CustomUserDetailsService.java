@@ -1,7 +1,7 @@
 package io.security.basicsecurity.security.service;
 
 import io.security.basicsecurity.security.context.AccountContext;
-import io.security.basicsecurity.user.entity.Account;
+import io.security.basicsecurity.admin.domain.entity.Account;
 import io.security.basicsecurity.user.service.AccountService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
