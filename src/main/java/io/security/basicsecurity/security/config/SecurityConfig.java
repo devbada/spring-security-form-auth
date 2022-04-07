@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -27,6 +28,7 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@Order(1)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final FormAuthenticationDetailsSource       authenticationDetailsSource;
@@ -35,11 +37,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(authenticationProvider());
+        auth.authenticationProvider(customAuthenticationProvider());
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider() {
+    public AuthenticationProvider customAuthenticationProvider() {
         return new CustomAuthenticationProvider();
     }
 
@@ -57,9 +59,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/", "/users/register", "/users", "/error", "/user/login*").permitAll()
                 .anyRequest().authenticated()
             .and()
-                .exceptionHandling()
-                .accessDeniedHandler(accessDeniedHandler())
-            .and()
                 .formLogin()
                 .usernameParameter("userId")
                 .loginPage("/user/login") // Controller 의 mapping url
@@ -68,7 +67,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationDetailsSource(authenticationDetailsSource)
                 .successHandler(successHandler)
                 .failureHandler(failureHandler)
-                .permitAll()
+            .and()
+                .exceptionHandling()
+                .accessDeniedHandler(accessDeniedHandler())
         ;
     }
 
