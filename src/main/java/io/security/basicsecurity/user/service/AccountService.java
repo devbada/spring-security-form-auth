@@ -1,13 +1,16 @@
 package io.security.basicsecurity.user.service;
 
-import io.security.basicsecurity.user.entity.Account;
+import io.security.basicsecurity.admin.domain.entity.Account;
+import io.security.basicsecurity.common.exception.NotFoundException;
 import io.security.basicsecurity.user.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.security.auth.login.AccountNotFoundException;
+import javax.persistence.Id;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -38,5 +41,13 @@ public class AccountService {
         account.setRole("ROLE_" + account.getRole());
 
         return accountRepository.save(account);
+    }
+
+    public List<Account> findAll() {
+        return accountRepository.findAll();
+    }
+
+    public Account get(Long accountId) throws NotFoundException {
+        return accountRepository.findById(accountId).orElseThrow(NotFoundException::new);
     }
 }

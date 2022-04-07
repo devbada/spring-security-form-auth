@@ -1,0 +1,73 @@
+package io.security.basicsecurity.admin.domain.dto;
+
+import lombok.*;
+
+import java.util.List;
+import java.util.Set;
+
+/**
+ * @since       2022.04.07
+ * @author      minam
+ * @description account dto
+ **********************************************************************************************************************/
+ 
+public class AccountDto {
+    public static class Request {
+
+        @Setter
+        @Getter
+        @ToString
+        @Builder
+        @AllArgsConstructor
+        @NoArgsConstructor
+        public static class Login {
+
+            private String name;
+            private String password;
+        }
+
+        @Setter
+        @Getter
+        @ToString
+        @Builder
+        @AllArgsConstructor
+        @NoArgsConstructor
+        public static class Add {
+
+            private String  name;
+            private String  password;
+            private String  email;
+            private Integer age;
+            private String  role;
+        }
+    }
+
+    public static class Response {
+
+        @Data
+        public static class FindOne {
+
+            private Long    id;
+            private String  name;
+            private String  password;
+            private String  email;
+            private Integer age;
+            private String  role;
+        }
+
+        @Data
+        public static class FindAll {
+
+            private Long      id;
+            private String    name;
+            private String    password;
+            private String    email;
+            private Integer   age;
+            private Set<Role> role;
+
+            public static class Role {
+                private String name;
+            }
+        }
+    }
+}
