@@ -22,7 +22,7 @@ import java.util.Objects;
  **********************************************************************************************************************/
 public class AjaxLoginProcessingFilter extends AbstractAuthenticationProcessingFilter {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     public AjaxLoginProcessingFilter() {
         super(new AntPathRequestMatcher("/api/login"));
@@ -49,5 +49,9 @@ public class AjaxLoginProcessingFilter extends AbstractAuthenticationProcessingF
 
     private boolean isAjax(HttpServletRequest request) {
         return "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
+    }
+
+    public void setObjectMapper(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
     }
 }
