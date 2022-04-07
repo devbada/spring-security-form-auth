@@ -9,3 +9,20 @@ X-Requested-With: XMLHttpRequest
 }
 
 ###
+
+POST http://localhost:8080/api/login
+Content-Type: application/json
+X-Requested-With: XMLHttpRequest
+
+{
+  "name": "manager",
+  "password": "1111"
+}
+
+###
+
+GET http://localhost:8080/api/messages
+Content-Type: application/json
+X-Requested-With: XMLHttpRequest
+
+###
