@@ -4,12 +4,18 @@ import io.security.basicsecurity.security.common.FormAuthenticationDetailsSource
 import io.security.basicsecurity.security.handler.CustomAccessDeniedHandler;
 import io.security.basicsecurity.security.handler.CustomAuthenticationFailureHandler;
 import io.security.basicsecurity.security.handler.CustomAuthenticationSuccessHandler;
+import io.security.basicsecurity.security.metadatasource.UrlFilterInvocationSecurityMetadataSource;
 import io.security.basicsecurity.security.provider.CustomAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.access.AccessDecisionManager;
+import org.springframework.security.access.AccessDecisionVoter;
+import org.springframework.security.access.vote.AffirmativeBased;
+import org.springframework.security.access.vote.RoleVoter;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,6 +25,12 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
+
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * @since       2022.01.05
@@ -51,11 +63,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+
+    @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/users/myPage").hasRole("USER")
-                .antMatchers("/messages").hasRole("MANAGER")
-                .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/", "/users/register", "/users", "/error", "/user/login*").permitAll()
                 .anyRequest().authenticated()
             .and()
@@ -70,6 +84,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
                 .exceptionHandling()
                 .accessDeniedHandler(accessDeniedHandler())
+            .and()
+                .addFilterBefore(customFilterSecurityInterceptor(), FilterSecurityInterceptor.class)
         ;
     }
 
@@ -85,5 +101,30 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations())
                       .antMatchers("/webjars/**");
+    }
+
+    @Bean
+    public FilterSecurityInterceptor customFilterSecurityInterceptor() throws Exception {
+
+        // 직접 만든 UrlFilterInvocationSecurityMetadataSource를 사용하기 위해 설정
+        FilterSecurityInterceptor filterSecurityInterceptor = new FilterSecurityInterceptor();
+        filterSecurityInterceptor.setSecurityMetadataSource(urlFilterInvocationSecurityMetadataSource());
+        filterSecurityInterceptor.setAccessDecisionManager(affirmativeBased()); // 인가 매니져
+        filterSecurityInterceptor.setAuthenticationManager(authenticationManagerBean()); // 인증 매니져
+        return filterSecurityInterceptor;
+    }
+
+    @Bean
+    public AccessDecisionManager affirmativeBased() {
+        return new AffirmativeBased(getAccessDecisionVotors());
+    }
+
+    private List<AccessDecisionVoter<?>> getAccessDecisionVotors() {
+        return Collections.singletonList(new RoleVoter());
+    }
+
+    @Bean
+    public FilterInvocationSecurityMetadataSource urlFilterInvocationSecurityMetadataSource() {
+        return new UrlFilterInvocationSecurityMetadataSource(new LinkedHashMap<>());
     }
 }
