@@ -2,6 +2,7 @@ package io.security.basicsecurity.security.config;
 
 import io.security.basicsecurity.security.common.FormAuthenticationDetailsSource;
 import io.security.basicsecurity.security.factory.UrlResourcesFactoryBean;
+import io.security.basicsecurity.security.filter.PermitAllFilter;
 import io.security.basicsecurity.security.handler.CustomAccessDeniedHandler;
 import io.security.basicsecurity.security.handler.CustomAuthenticationFailureHandler;
 import io.security.basicsecurity.security.handler.CustomAuthenticationSuccessHandler;
@@ -30,6 +31,7 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 
+import javax.servlet.Filter;
 import java.util.Collections;
 import java.util.List;
 
@@ -48,6 +50,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final CustomAuthenticationSuccessHandler    successHandler;
     private final CustomAuthenticationFailureHandler    failureHandler;
     private final SecurityResourceService               securityResourceService;
+
+    private final String[] permitAllResources = {"/", "/users/register", "/users", "/error", "/user/login*"};
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -72,7 +76,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/", "/users/register", "/users", "/error", "/user/login*").permitAll()
                 .anyRequest().authenticated()
             .and()
                 .formLogin()
@@ -88,7 +91,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .accessDeniedHandler(accessDeniedHandler())
             .and()
                 .addFilterBefore(customFilterSecurityInterceptor(), FilterSecurityInterceptor.class)
+                .addFilterBefore(permitAllFilter(), FilterSecurityInterceptor.class)
         ;
+    }
+
+    @Bean
+    public Filter permitAllFilter() throws Exception {
+        PermitAllFilter permitAllFilter = new PermitAllFilter(permitAllResources);
+        permitAllFilter.setSecurityMetadataSource(urlFilterInvocationSecurityMetadataSource());
+        permitAllFilter.setAccessDecisionManager(affirmativeBased()); // 인가 매니져
+        permitAllFilter.setRejectPublicInvocations(false);
+        return permitAllFilter;
     }
 
     @Bean
