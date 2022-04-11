@@ -1,5 +1,6 @@
 package io.security.basicsecurity.user.service;
 
+import io.security.basicsecurity.common.exception.NotFoundException;
 import io.security.basicsecurity.security.entity.Role;
 import io.security.basicsecurity.user.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,5 +25,18 @@ public class RoleService {
     @Transactional(readOnly=true)
     public Set<Role> gets(List<String> names) {
         return roleRepository.findByRoleNameIn(names);
+    }
+
+    @Transactional(readOnly=true)
+    public Role findByRoleName(String name) {
+        return roleRepository.findByRoleName(name).orElseThrow(NotFoundException::new);
+    }
+
+    public List<Role> findAll() {
+        return roleRepository.findAll();
+    }
+
+    public Role findById(Long id) {
+        return roleRepository.findById(id).orElseThrow(NotFoundException::new);
     }
 }

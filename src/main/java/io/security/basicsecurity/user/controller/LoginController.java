@@ -24,6 +24,11 @@ import java.util.Objects;
 @AllArgsConstructor
 public class LoginController {
 
+    @GetMapping("/login")
+    public String goLogin() {
+        return "redirect:/user/login";
+    }
+
     @GetMapping("/user/login")
     public String login(
          @RequestParam(value="error", required=false) String error

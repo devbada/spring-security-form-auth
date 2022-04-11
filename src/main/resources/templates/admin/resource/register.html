@@ -13,52 +13,46 @@
     <a href="javascript:void(0);" class="cc-tab-item on">리소스관리</a>
   </div>
   <div class="tbl_wrp">
-<form class="form-horizontal" th:action="@{/admin/resources}" method="post" th:object="${resources}">
-  <input th:type="hidden" name="id" th:value="*{id}" />
+<form class="form-horizontal" th:action="@{/admin/resources}" method="post">
   <div class="form-group">
     <label for="resourceName" class="col-sm-2 control-label">리소스명</label>
     <div class="col-sm-10">
-      <input type="text" class="form-control input-large" name="resourceName" id="resourceName" placeholder="리소스명" th:value="*{resourceName}">
+      <input type="text" class="form-control input-large" name="resourceName" id="resourceName" placeholder="리소스명" >
     </div>
   </div>
 
   <div class="form-group">
     <label for="resourceType" class="col-sm-2 control-label">리소스타입</label>
     <div class="col-sm-10">
-      <input type="text" class="form-control input-large" name="resourceType" id="resourceType" placeholder="리소스타입" th:value="*{resourceType}">
+      <input type="text" class="form-control input-large" name="resourceType" id="resourceType" placeholder="리소스타입" >
     </div>
   </div>
   <div class="form-group">
     <label for="httpMethod" class="col-sm-2 control-label">HttpMethod</label>
     <div class="col-sm-10">
-      <input type="text" class="form-control input-large" name="httpMethod" id="httpMethod" placeholder="HttpMethod" th:value="*{httpMethod}">
+      <input type="text" class="form-control input-large" name="httpMethod" id="httpMethod" placeholder="HttpMethod">
     </div>
   </div>
   <div class="form-group">
     <label for="orderNum" class="col-sm-2 control-label">순서</label>
     <div class="col-sm-10">
-      <input type="text" class="form-control input-large" name="orderNum" id="orderNum" placeholder="순서" th:value="*{orderNum}">
+      <input type="text" class="form-control input-large" name="orderNum" id="orderNum" placeholder="순서">
     </div>
   </div>
   <div class="form-group">
-    <label class="col-sm-2 control-label">권한</label>
+    <label for="roleName" class="col-sm-2 control-label">권한</label>
     <div class="col-sm-10">
-        <th:block th:each="myRole: ${resources.roleSet}">
-            <th:block th:each="role: ${roleList}">
-                <label>
-                    <input type="checkbox" name="roleName" th:value="${role.roleName}" th:if="${myRole.roleName.equals(role.roleName)}" th:text="${role.roleName}" checked="checked" />
-                    <input type="checkbox" name="roleName" th:value="${role.roleName}" th:unless="${myRole.roleName.equals(role.roleName)}" th:text="${role.roleName}" />
-                </label>
-            </th:block>
-        </th:block>
+      <select class="custom-select" name="roleName" id="roleName">
+        <option th:each="role: ${roleList}"
+                th:value="${role.roleName}"
+                th:text="${role.roleName}"></option>
+      </select>
     </div>
   </div>
   <div class="form-group">
     <div class="col-sm-offset-1 col-sm-10">
       <button type="Submit" class="btn btn-dark btn-lg">등록</button>
-      <a th:href="@{/logout}">
       <a class="btn btn-dark btn-lg" style="margin:10;" th:href="@{/admin/resources}">목록 </a>
-      <a class="btn btn-dark btn-lg" style="margin:10;" th:href="@{'/admin/resources/delete/' + *{id}}">삭제</a>
     </div>
   </div>
 </form>
