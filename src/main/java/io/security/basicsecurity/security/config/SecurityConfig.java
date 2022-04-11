@@ -9,6 +9,7 @@ import io.security.basicsecurity.security.handler.CustomAuthenticationSuccessHan
 import io.security.basicsecurity.security.metadatasource.UrlFilterInvocationSecurityMetadataSource;
 import io.security.basicsecurity.security.provider.CustomAuthenticationProvider;
 import io.security.basicsecurity.security.service.SecurityResourceService;
+import io.security.basicsecurity.security.voter.IpAddressVoter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -19,6 +20,7 @@ import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.access.vote.AffirmativeBased;
+import org.springframework.security.access.vote.AuthenticatedVoter;
 import org.springframework.security.access.vote.RoleHierarchyVoter;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -30,11 +32,13 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.access.expression.WebExpressionVoter;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 
 import javax.servlet.Filter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -133,20 +137,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public AccessDecisionManager affirmativeBased() {
-        return new AffirmativeBased(getAccessDecisionVotors());
+        AffirmativeBased accessDecisionManager = new AffirmativeBased(getAccessDecisionVoters());
+        accessDecisionManager.setAllowIfAllAbstainDecisions(false); // 접근 승인 거부 보류시 접근 허용은 true 접근 거부는 false
+        return accessDecisionManager;
     }
 
-    private List<AccessDecisionVoter<?>> getAccessDecisionVotors() {
+    private List<AccessDecisionVoter<?>> getAccessDecisionVoters() {
+        AuthenticatedVoter authenticatedVoter = new AuthenticatedVoter();
+        WebExpressionVoter webExpressionVoter = new WebExpressionVoter();
+        IpAddressVoter ipAddressVoter = new IpAddressVoter(securityResourceService);
 
-        List<AccessDecisionVoter<? extends Object>> accessDecisionVoters = new ArrayList<>();
-        accessDecisionVoters.add(roleVoter());
-
-        return accessDecisionVoters;
+        return Arrays.asList(ipAddressVoter, authenticatedVoter, webExpressionVoter, roleVoter());
     }
 
     @Bean
     public AccessDecisionVoter<? extends Object> roleVoter() {
-        return new RoleHierarchyVoter(roleHierarchy());
+        RoleHierarchyVoter voter = new RoleHierarchyVoter(roleHierarchy());
+        voter.setRolePrefix("ROLE_");
+        return voter;
     }
 
     @Bean
