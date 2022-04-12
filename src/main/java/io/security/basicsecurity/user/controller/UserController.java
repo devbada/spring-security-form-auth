@@ -1,13 +1,9 @@
 package io.security.basicsecurity.user.controller;
 
 import io.security.basicsecurity.admin.domain.dto.AccountDto;
-import io.security.basicsecurity.admin.domain.entity.Account;
-import io.security.basicsecurity.user.form.AccountForm;
-import io.security.basicsecurity.user.service.AccountService;
+import io.security.basicsecurity.user.adapter.AccountAdapter;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
-import org.modelmapper.ModelMapper;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,8 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 @AllArgsConstructor
 public class UserController {
 
-    private final AccountService accountService;
-    private final PasswordEncoder passwordEncoder;
+    private final AccountAdapter accountAdapter;
 
     @GetMapping("/users/myPage")
     public String myPage() {
@@ -38,15 +33,7 @@ public class UserController {
     @SneakyThrows
     @PostMapping("/users")
     public String add(AccountDto.Request.Add form, Model model) {
-
-        ModelMapper modelMapper = new ModelMapper() ;
-        Account account = modelMapper.map(form, Account.class);
-        account.setPassword(passwordEncoder.encode(account.getPassword()));
-
-        Account persistAccount = accountService.add(account);
-
-        model.addAttribute("account", persistAccount);
-
+        model.addAttribute("account", accountAdapter.createAccount(form));
         return "redirect:/user/login";
     }
 }

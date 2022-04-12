@@ -1,12 +1,10 @@
 package io.security.basicsecurity.admin.domain.entity;
 
-import lombok.Data;
+import io.security.basicsecurity.security.entity.Role;
+import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import java.util.List;
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Set;
 
 /**
@@ -15,9 +13,14 @@ import java.util.Set;
  * @description account
  **********************************************************************************************************************/
 
- @Entity
- @Data
-public class Account {
+@Entity
+@Data
+@ToString(exclude = {"roles"})
+@EqualsAndHashCode(of = "id")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Account implements Serializable {
 
     @Id
     @GeneratedValue
@@ -31,8 +34,7 @@ public class Account {
 
     private Integer age;
 
-    private String role;
-
-//    @OneToMany
-//    private Set<Role> roles;
+    @ManyToMany(fetch = FetchType.EAGER, cascade={CascadeType.ALL})
+    @JoinTable(name = "account_roles", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = { @JoinColumn(name = "role_id") })
+    private Set<Role> roles;
 }

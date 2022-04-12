@@ -38,8 +38,6 @@ public class AccountService {
             throw new Exception("already Exists");
         }
 
-        account.setRole("ROLE_" + account.getRole());
-
         return accountRepository.save(account);
     }
 

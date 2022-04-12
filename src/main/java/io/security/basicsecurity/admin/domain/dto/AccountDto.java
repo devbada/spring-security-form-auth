@@ -20,6 +20,19 @@ public class AccountDto {
         @Builder
         @AllArgsConstructor
         @NoArgsConstructor
+        public static class Find {
+
+            private Long    id;
+            private String  name;
+            private String  password;
+        }
+
+        @Setter
+        @Getter
+        @ToString
+        @Builder
+        @AllArgsConstructor
+        @NoArgsConstructor
         public static class Login {
 
             private String name;
@@ -34,11 +47,11 @@ public class AccountDto {
         @NoArgsConstructor
         public static class Add {
 
-            private String  name;
-            private String  password;
-            private String  email;
-            private Integer age;
-            private String  role;
+            private String       name;
+            private String       password;
+            private String       email;
+            private Integer      age;
+            private List<String> roles;
         }
     }
 
@@ -52,7 +65,13 @@ public class AccountDto {
             private String  password;
             private String  email;
             private Integer age;
-            private String  role;
+            private List<Role>  roles;
+
+            @Data
+            public static class Role {
+                private String roleName;
+                private String roleDesc;
+            }
         }
 
         @Data
@@ -63,10 +82,12 @@ public class AccountDto {
             private String    password;
             private String    email;
             private Integer   age;
-            private Set<Role> role;
+            private Set<Role> roles;
 
+            @Data
             public static class Role {
-                private String name;
+                private String roleName;
+                private String roleDesc;
             }
         }
     }
