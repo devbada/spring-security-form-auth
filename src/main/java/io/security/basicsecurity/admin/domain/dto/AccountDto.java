@@ -20,6 +20,19 @@ public class AccountDto {
         @Builder
         @AllArgsConstructor
         @NoArgsConstructor
+        public static class Find {
+
+            private Long    id;
+            private String  name;
+            private String  password;
+        }
+
+        @Setter
+        @Getter
+        @ToString
+        @Builder
+        @AllArgsConstructor
+        @NoArgsConstructor
         public static class Login {
 
             private String name;
