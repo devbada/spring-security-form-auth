@@ -26,3 +26,9 @@ Content-Type: application/json
 X-Requested-With: XMLHttpRequest
 
 ###
+
+GET http://localhost:8080/users/order
+Content-Type: application/json
+X-Requested-With: XMLHttpRequest
+
+###

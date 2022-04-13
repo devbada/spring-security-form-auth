@@ -50,7 +50,7 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-@EnableGlobalMethodSecurity(prePostEnabled=true, jsr250Enabled=true)
+@EnableGlobalMethodSecurity(prePostEnabled=true, jsr250Enabled=true, securedEnabled=true)
 @Order(1)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 

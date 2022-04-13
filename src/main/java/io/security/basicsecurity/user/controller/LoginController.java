@@ -38,7 +38,7 @@ public class LoginController {
         model.addAttribute("error", error);
 
         if (StringUtils.isNotBlank(exception)) {
-            String exceptionMessage = "";
+            String exceptionMessage = "ERROR";
             switch (exception) {
                 case "E00100101":
                     exceptionMessage = "인증 정보가 올바르지 않습니다.";
