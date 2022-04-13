@@ -1,5 +1,6 @@
 package io.security.basicsecurity.security.factory;
 
+import io.security.basicsecurity.security.factory.enumerate.ResourceType;
 import io.security.basicsecurity.security.service.SecurityResourceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.FactoryBean;
@@ -20,6 +21,7 @@ public class MethodResourceFactoryBean  implements FactoryBean<LinkedHashMap<Str
     // DB로부터 자원/권한 정보를 호출하여 갖고 있다.
     private final SecurityResourceService securityResourceService;
     private LinkedHashMap<String, List<ConfigAttribute>> resourceMap;
+    private final ResourceType resourceType;
 
     @Override
     public LinkedHashMap<String, List<ConfigAttribute>> getObject() {
@@ -31,7 +33,15 @@ public class MethodResourceFactoryBean  implements FactoryBean<LinkedHashMap<Str
     }
 
     private void init() {
-        this.resourceMap = securityResourceService.getMethodResourceList();
+        switch (resourceType) {
+            case METHOD: {
+                this.resourceMap = securityResourceService.getMethodResourceList();
+                break;
+            }
+            case POINT_CUT:
+                this.resourceMap = securityResourceService.getPointcutResourceList();
+            default: break;
+        }
     }
 
     @Override

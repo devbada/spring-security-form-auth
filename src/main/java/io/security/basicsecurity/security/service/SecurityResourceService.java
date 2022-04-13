@@ -51,7 +51,16 @@ public class SecurityResourceService {
     public LinkedHashMap<String, List<ConfigAttribute>> getMethodResourceList() {
         LinkedHashMap<String, List<ConfigAttribute>> resourceMap = new LinkedHashMap<>();
         List<Resources> resources = resourcesRepository.findAllMethodResources();
+        return getResourcesMap(resourceMap, resources);
+    }
 
+    public LinkedHashMap<String, List<ConfigAttribute>> getPointcutResourceList() {
+        LinkedHashMap<String, List<ConfigAttribute>> resourceMap = new LinkedHashMap<>();
+        List<Resources> resources = resourcesRepository.findAllPointcutResources();
+        return getResourcesMap(resourceMap, resources);
+    }
+
+    private LinkedHashMap<String, List<ConfigAttribute>> getResourcesMap(LinkedHashMap<String, List<ConfigAttribute>> resourceMap, List<Resources> resources) {
         resources.forEach(resource -> {
             List<ConfigAttribute> configAttributes = new ArrayList<>();
             resource.getRoleSet().forEach(role -> {
@@ -59,7 +68,6 @@ public class SecurityResourceService {
             });
             resourceMap.put(resource.getResourceName(), configAttributes);
         });
-
         return resourceMap;
     }
 }
