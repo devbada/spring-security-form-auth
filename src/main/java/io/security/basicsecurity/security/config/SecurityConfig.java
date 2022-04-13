@@ -25,7 +25,6 @@ import org.springframework.security.access.vote.RoleHierarchyVoter;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -38,7 +37,6 @@ import org.springframework.security.web.access.intercept.FilterInvocationSecurit
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 
 import javax.servlet.Filter;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -50,7 +48,6 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-@EnableGlobalMethodSecurity(prePostEnabled=true, jsr250Enabled=true, securedEnabled=true)
 @Order(1)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -137,6 +134,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return filterSecurityInterceptor;
     }
 
+
     @Bean
     public AccessDecisionManager affirmativeBased() {
         AffirmativeBased accessDecisionManager = new AffirmativeBased(getAccessDecisionVoters());
@@ -173,4 +171,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private UrlResourcesFactoryBean urlResourcesFactoryBean() {
         return new UrlResourcesFactoryBean(securityResourceService);
     }
+
 }

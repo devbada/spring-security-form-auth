@@ -47,4 +47,19 @@ public class SecurityResourceService {
     public List<String> getAccessIpList() {
         return accessIpRepository.findAll().stream().map(AccessIp::getIpAddress).collect(Collectors.toList());
     }
+
+    public LinkedHashMap<String, List<ConfigAttribute>> getMethodResourceList() {
+        LinkedHashMap<String, List<ConfigAttribute>> resourceMap = new LinkedHashMap<>();
+        List<Resources> resources = resourcesRepository.findAllMethodResources();
+
+        resources.forEach(resource -> {
+            List<ConfigAttribute> configAttributes = new ArrayList<>();
+            resource.getRoleSet().forEach(role -> {
+                configAttributes.add(new SecurityConfig(role.getRoleName())); // 권한 정보
+            });
+            resourceMap.put(resource.getResourceName(), configAttributes);
+        });
+
+        return resourceMap;
+    }
 }

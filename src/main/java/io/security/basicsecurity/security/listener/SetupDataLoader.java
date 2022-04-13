@@ -72,8 +72,8 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         Role managerRole = createRoleIfNotFound("ROLE_MANAGER", "매니저");
         roles1.add(managerRole);
 
-        createResourceIfNotFound("io.security.basicsecurity.aopsecurity.method.AopMethodService.methodTest", "", roles1, "method");
-        createResourceIfNotFound("io.security.basicsecurity.aopsecurity.method.AopMethodService.innerCallMethodTest", "", roles1, "method");
+//        createResourceIfNotFound("io.security.basicsecurity.aopsecurity.method.AopMethodService.methodTest", "", roles1, "method");
+//        createResourceIfNotFound("io.security.basicsecurity.aopsecurity.method.AopMethodService.innerCallMethodTest", "", roles1, "method");
         createResourceIfNotFound("execution(* io.security.basicsecurity.aopsecurity.pointcut.*Service.*(..))", "", roles1, "pointcut");
         createUserIfNotFound("manager", "pass", "manager@gmail.com", 20, roles1);
         createRoleHierarchyIfNotFound(managerRole, adminRole);

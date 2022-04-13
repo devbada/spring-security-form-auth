@@ -2,6 +2,7 @@ package io.security.basicsecurity.security.service;
 
 import io.security.basicsecurity.security.context.AccountContext;
 import io.security.basicsecurity.admin.domain.entity.Account;
+import io.security.basicsecurity.security.entity.Role;
 import io.security.basicsecurity.user.service.AccountService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
